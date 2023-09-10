@@ -1,10 +1,12 @@
-require('gotenv').config( );
+require('dotenv').config( );
 const express = require('express');
 const app = express( );
 const PORT = process.env.PORT || 3000;
 const mongoose = require('mongoose');
-const allFlights = require('./data');
 const Flight = require('./models/flight');
+
+// Delete const allFlights, if data.js is not needed to store flights data connecting to MongoDB
+const allFlights = require('./data');
 
 
 //Global Configuration for MongoDB 
@@ -43,7 +45,9 @@ app.use((req, res, next) => {
 app.use(express.urlencoded( { extended: false } ) )
 
 
+
 // Index Route
+// Display all Flights Data
 // Part2: MongoDB
 
 
@@ -70,6 +74,7 @@ app.use(express.urlencoded( { extended: false } ) )
 
 
 // Show Route
+// Show selected flight
 // Part2: MongoDB
 
 
