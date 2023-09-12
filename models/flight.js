@@ -3,25 +3,29 @@ const { Schema, model } = require('mongoose');
 // Flight Model with properties
 const flightSchema = new Schema(
 
-// HELP: Does Airline need a required function like flightNo?
-// HELP: How to include default values??
+    // HELP: ERROR VALIDATIOR ERROR, path required
+    // HELP: How to include default values??
 
     {
         airline: {
             type: String,
-            enum: ['America','Southwest', 'United'],
-            
-
-    },
+            enum: ['American', 'Southwest', 'United'],
+            required: true,
+        },
         flightNo: {
             type: Number,
-            min: [ 10 ],
-            max: [ 9999 ],
-    },
+            min: 10,
+            max: 9999,
+            required: true,
+        },
         departs: {
-            type: Date,  
+            type: Date,
         }
-    } 
-)
-const Flight = model('Flight', flightSchema)
+    },
+    {
+        timestamps: true,
+    }
+);
+
+const Flight = model('Flight', flightSchema);
 module.exports = Flight;

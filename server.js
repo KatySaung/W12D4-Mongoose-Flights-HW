@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const Flight = require('./models/flight');
 
 // Delete const allFlights, if data.js is not needed to store flights data connecting to MongoDB
-const allFlights = require('./data');
+
 
 
 //Global Configuration for MongoDB 
@@ -22,8 +22,8 @@ mongoose.connect(mongoURI, {
 // Connection Error/Success
 // Define callback functions for various events
 db.on('error', (err) => console.log(err.message + ' is mongod not running?'));
-db.on('open', () => console.log('mongo connected!'));
-db.on('close', () => console.log('mongo disconnected'));
+db.on('open', ( ) => console.log('mongo connected!'));
+db.on('close', ( ) => console.log('mongo disconnected'));
 
 // Create jsxViewEngine
 const jsxViewEngine = require('jsx-view-engine');
@@ -38,7 +38,7 @@ app.engine('jsx', jsxViewEngine( ));
 app.use((req, res, next) => {
     console.log('Middleware: I run for all routes');
     next( );
-})
+});
 
 // the urlencoded to access req.body in Post Route
 // callback function
@@ -49,11 +49,25 @@ app.use(express.urlencoded( { extended: false } ) )
 // Index Route
 // Display all Flights Data
 // Part2: MongoDB
+app.get('/flights', async (req, res) => {
+    try {
+       const foundFlights = await Flight.find({ })
+       res.status(200).render('flights/Index', {
+        flights: foundFlights,
+       });
+    } catch (err) {
+    res.status(400).send(err)
+    }   
+});
+
 
 
 // New Route
 // Part2: MongoDB
-
+app.get("/flights/new", (req, res) => {
+    console.log('New controller');
+    res.render("Flights/New");
+})
 
 // Delete Route
 // Part2: MongoDB
@@ -66,6 +80,16 @@ app.use(express.urlencoded( { extended: false } ) )
 
 // Create Route
 // Part2: MongoDB
+app.post("/flights", async (req, res) => {
+    try {
+        req.body.myFavFLight = req.body.myFavFlight === "on";
+        const createdFlight = await Flight.create(req.body)
+        res.status(201).redirect('/flights');
+    } catch (err) {
+        res.status(400).send(err)
+    }
+});
+
 
 
 // Edit Route
@@ -78,15 +102,7 @@ app.use(express.urlencoded( { extended: false } ) )
 // Part2: MongoDB
 
 
-// HELP!!! WHERE SHOULD USER STORIES GO?? 
-// ("As A User" == AAU):
-/* 
-- AAU, I want to view a list of all flights (index view) that displays each flight's airline, flight no., and departure date/time
 
--AAU, I want to create flights by entering the information on a page (new view) that has a form and submitting it
-
--Hint: Checkout the <input type="datetime-local">to assist users in entering valid date/time values
-*/
 
 app.listen(PORT, ( ) =>{
     console.log(`Listening on port: $(PORT)`);
