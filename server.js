@@ -4,6 +4,7 @@ const app = express( );
 const PORT = process.env.PORT || 3000;
 const mongoose = require('mongoose');
 const Flight = require('./models/flight');
+const Destination = require('./models/destination');
 
 // Delete const allFlights, if data.js is not needed to store flights data connecting to MongoDB
 
@@ -21,7 +22,7 @@ mongoose.connect(mongoURI, {
 
 // Connection Error/Success
 // Define callback functions for various events
-db.on('error', (err) => console.log(err.message + ' is mongod not running?'));
+db.on('error', (err) => console.log(err.message + ' is mongo not running?'));
 db.on('open', ( ) => console.log('mongo connected!'));
 db.on('close', ( ) => console.log('mongo disconnected'));
 
@@ -35,6 +36,7 @@ app.engine('jsx', jsxViewEngine( ));
 
 
 // Middleware
+// Interface between code and database calls
 app.use((req, res, next) => {
     console.log('Middleware: I run for all routes');
     next( );
@@ -46,7 +48,7 @@ app.use(express.urlencoded( { extended: false } ) )
 
 
 
-// Index Route
+// Index Routes
 // Display all Flights Data
 // Part2: MongoDB
 app.get('/flights', async (req, res) => {
@@ -60,7 +62,19 @@ app.get('/flights', async (req, res) => {
     }   
 });
 
-
+// Part2: MongoDB
+// Index Route: Display Destinations
+// HELP: IS destinations needed for Index and NEW
+// app.get('/destinations', async (req, res) => {
+//     try {
+//         const foundDestinations = await Destination.find({ })
+//         res.status(200).render('destinations/Index', {
+//            destinations:foundDestinations, 
+//         });
+//     } catch (err) {
+//         res.status(400).send(err)
+//     }
+// });
 
 // New Route
 // Part2: MongoDB
@@ -69,6 +83,12 @@ app.get("/flights/new", (req, res) => {
     res.render("Flights/New");
 })
 
+// HELP: IS destinations needed for Index and NEW
+// app.get("/destinations/new", (req, res) => {
+//     console.log('New controller');
+//     res.render("Destinations/New");
+// })
+
 // Delete Route
 // Part2: MongoDB
 
@@ -76,13 +96,29 @@ app.get("/flights/new", (req, res) => {
 
 // Update Route
 // Part2: MongoDB
+// #5: add a destination for that flight with arrival date/time & one of the established airport codes
+app.put('flights/:id', async (req, res) => {
+    try {
+        const updatedFlight = await Flight.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            {new: true})
+            res.redirect(`/flights${req.params.id}`);
+    }catch(err){
+        res.status(400).send(err);
+    }
+})
+
+
+
+
 
 
 // Create Route
 // Part2: MongoDB
 app.post("/flights", async (req, res) => {
     try {
-        req.body.myFavFLight = req.body.myFavFlight === "on";
+        req.body.myFavFlight = req.body.myFavFlight === "on";
         const createdFlight = await Flight.create(req.body)
         res.status(201).redirect('/flights');
     } catch (err) {
@@ -100,10 +136,21 @@ app.post("/flights", async (req, res) => {
 // Show Route
 // Show selected flight
 // Part2: MongoDB
+//HELP!!! ISSUE WITH SHOW PATH AND details link. WILL WORK IF I HAVE SHOW OUTSIDE OF flights folder.
+app.get('/flights/:id', async (req, res) => {
+    try {
+      const foundFlight= await Flight.findById(req.params.id)
+      res.render('/flights/Show', {
+        flight: foundFlight
+      });
+    }catch(err){
+      res.status(400).send(err)
+    }
+  });
 
 
 
 
 app.listen(PORT, ( ) =>{
-    console.log(`Listening on port: $(PORT)`);
+    console.log(`Listening on port: ${PORT}`);
 })

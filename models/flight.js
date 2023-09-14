@@ -1,11 +1,12 @@
 const { Schema, model } = require('mongoose');
 
+// HELP: Need to use destination properties by importing the destination schema?
+
 // Flight Model with properties
+// Part 2: MongoDB
+// Create Airport and Destination properties (destinationSchema)
 const flightSchema = new Schema(
-
-    // HELP: ERROR VALIDATIOR ERROR, path required
-    // HELP: How to include default values??
-
+    
     {
         airline: {
             type: String,
@@ -20,7 +21,17 @@ const flightSchema = new Schema(
         },
         departs: {
             type: Date,
+        },
+        // Part 2: MongoDB
+        //  Created airport and destination properties
+        airport: {
+            type: String,
+            enum: ['AUS', 'DAL', 'LAX', 'SAN', 'SEA'],
+        },
+        destinations: {
+            type: [Schema.Types.ObjectID], ref: 'Destination',
         }
+
     },
     {
         timestamps: true,
