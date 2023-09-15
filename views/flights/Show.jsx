@@ -3,10 +3,9 @@ const React = require("react")
 
 // Display each flight search request, flight no and departure date/time to user
 // Form and Submission
-// include flight airline, flight no and departure date/time
 // Part 2: MongoDB
-// #5 NEED TO DO: Details Page, add destination include arrival & airport
-// #6 NEED TO DO: Details Page, see list of flight's destination(arrival & airport)
+// #5 :add destination include arrival & airport
+// #6 :see list of flight's destination(arrival & airport)
 
 class Show extends React.Component{
     render( ) {

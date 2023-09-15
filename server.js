@@ -62,19 +62,6 @@ app.get('/flights', async (req, res) => {
     }   
 });
 
-// Part2: MongoDB
-// Index Route: Display Destinations
-// HELP: IS destinations needed for Index and NEW
-// app.get('/destinations', async (req, res) => {
-//     try {
-//         const foundDestinations = await Destination.find({ })
-//         res.status(200).render('destinations/Index', {
-//            destinations:foundDestinations, 
-//         });
-//     } catch (err) {
-//         res.status(400).send(err)
-//     }
-// });
 
 // New Route
 // Part2: MongoDB
@@ -83,30 +70,18 @@ app.get("/flights/new", (req, res) => {
     res.render("Flights/New");
 })
 
-// HELP: IS destinations needed for Index and NEW
-// app.get("/destinations/new", (req, res) => {
-//     console.log('New controller');
-//     res.render("Destinations/New");
-// })
-
 // Delete Route
 // Part2: MongoDB
 
 
 // Update Route
 // Part2: MongoDB
-// #5: add a destination for that flight with arrival date/time & one of the established airport codes
-// NEED HELP: NEED functions TO GET THE ID of the flight and update the flight ID in order to put that into the try catch ro the form to update.
-// HOW TO GET and UPDATE?
-// THE UPDATE IS GIVING BACK AN empty object
-// get flight and update to destinations
+// #5: add a destination for that flight with arrival date/time & one of the established airport codes.
 app.put('/flights/:id', async (req, res) => {
     try {
       const destination = req.body
       const foundFlight = await Flight.findById(req.params.id)
-      console.log(foundFlight)
       foundFlight.destinations.push(destination)
-      console.log(foundFlight)
       const updatedFlight = await Flight.findByIdAndUpdate(req.params.id, foundFlight, {new: true})
         res.status(201).redirect('/flights');
     }catch(err){
@@ -131,11 +106,9 @@ app.post("/flights", async (req, res) => {
 // Part2: MongoDB
 
 
-
 // Show Route
 // Show selected flight
 // Part2: MongoDB
-//HELP!!! ISSUE WITH SHOW PATH AND details link. WILL WORK IF I HAVE SHOW OUTSIDE OF flights folder.
 app.get('/flights/:id', async (req, res) => {
     try {
       const foundFlight= await Flight.findById(req.params.id)

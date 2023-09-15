@@ -15,8 +15,6 @@ class New extends React.Component{
        
         // Part 2: MongoDB
         // #3 Added Airport input with select options with defaultValue= SAN
-        // NEED HELP: Select Airport Options not working and need to set defalutValue. Airport value undefined
-        // NEED HELP: DEPARTURE DATE NOW MISSING CALENDAR OPTION(NEW & EDIT.jsx). Destination value undefined
         return (
             <div>
                 <h1>New Flights Page</h1>
