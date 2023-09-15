@@ -1,12 +1,22 @@
 const { Schema, model } = require('mongoose');
 
+const destinationSchema = new Schema (
+    {
+        airport: {
+            type: String,
+            enum: ['AUS', 'DAL', 'LAX', 'SAN', 'SEA'],
+        },
+        arrival: {
+            type: Date,
+        },
+    });
+
 // HELP: Need to use destination properties by importing the destination schema?
 
 // Flight Model with properties
 // Part 2: MongoDB
 // Create Airport and Destination properties (destinationSchema)
-const flightSchema = new Schema(
-    
+const flightSchema = new Schema(   
     {
         airline: {
             type: String,
@@ -24,19 +34,19 @@ const flightSchema = new Schema(
         },
         // Part 2: MongoDB
         //  Created airport and destination properties
+        // Set Default airport location to SAN
         airport: {
             type: String,
             enum: ['AUS', 'DAL', 'LAX', 'SAN', 'SEA'],
         },
-        destinations: {
-            type: [Schema.Types.ObjectID], ref: 'Destination',
-        }
-
-    },
+        destinations: [destinationSchema],
+        },
+        // destinations set up below if there was another schema created for destination.js
+        // type: [Schema.Types.ObjectID], 
+        // ref: 'Destination',
     {
         timestamps: true,
     }
 );
-
 const Flight = model('Flight', flightSchema);
 module.exports = Flight;

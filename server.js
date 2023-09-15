@@ -4,10 +4,9 @@ const app = express( );
 const PORT = process.env.PORT || 3000;
 const mongoose = require('mongoose');
 const Flight = require('./models/flight');
-const Destination = require('./models/destination');
+const methodOverride = require('method-override')
 
 // Delete const allFlights, if data.js is not needed to store flights data connecting to MongoDB
-
 
 
 //Global Configuration for MongoDB 
@@ -46,7 +45,8 @@ app.use((req, res, next) => {
 // callback function
 app.use(express.urlencoded( { extended: false } ) )
 
-
+//Middleware for override (edit method to work)
+app.use(methodOverride('_method'));
 
 // Index Routes
 // Display all Flights Data
@@ -93,39 +93,38 @@ app.get("/flights/new", (req, res) => {
 // Part2: MongoDB
 
 
-
 // Update Route
 // Part2: MongoDB
 // #5: add a destination for that flight with arrival date/time & one of the established airport codes
-app.put('flights/:id', async (req, res) => {
+// NEED HELP: NEED functions TO GET THE ID of the flight and update the flight ID in order to put that into the try catch ro the form to update.
+// HOW TO GET and UPDATE?
+// THE UPDATE IS GIVING BACK AN empty object
+// get flight and update to destinations
+app.put('/flights/:id', async (req, res) => {
     try {
-        const updatedFlight = await Flight.findByIdAndUpdate(
-            req.params.id,
-            req.body,
-            {new: true})
-            res.redirect(`/flights${req.params.id}`);
+      const destination = req.body
+      const foundFlight = await Flight.findById(req.params.id)
+      console.log(foundFlight)
+      foundFlight.destinations.push(destination)
+      console.log(foundFlight)
+      const updatedFlight = await Flight.findByIdAndUpdate(req.params.id, foundFlight, {new: true})
+        res.status(201).redirect('/flights');
     }catch(err){
         res.status(400).send(err);
     }
 })
 
 
-
-
-
-
 // Create Route
 // Part2: MongoDB
 app.post("/flights", async (req, res) => {
     try {
-        req.body.myFavFlight = req.body.myFavFlight === "on";
         const createdFlight = await Flight.create(req.body)
         res.status(201).redirect('/flights');
     } catch (err) {
         res.status(400).send(err)
     }
 });
-
 
 
 // Edit Route
@@ -140,7 +139,7 @@ app.post("/flights", async (req, res) => {
 app.get('/flights/:id', async (req, res) => {
     try {
       const foundFlight= await Flight.findById(req.params.id)
-      res.render('/flights/Show', {
+      res.render('flights/Show', {
         flight: foundFlight
       });
     }catch(err){
@@ -148,6 +147,10 @@ app.get('/flights/:id', async (req, res) => {
     }
   });
 
+//   REDIRECT from root page to flights route path/CATCH ALL ROUTE
+  app.get("*", (req, res) => {
+    res.redirect("/flights");
+  });
 
 
 

@@ -20,14 +20,12 @@ class Index extends React.Component {
                             return (
                                 // map through properties airline,flightNo,departs
                                 // Part 2#4: link for user to create a new flight search
-                                <div>
+                                // Do not use div to wrap li key or will get WARNING ERROR: (Each child in a list should have unique "key" prop. Check top-level render using li.)
                                     <li key= { i }>{`${flight.airline} ${flight.flightNo} ${flight.departs}`}
                                     <nav>
-                                        <a href={`/flights/${flight._id}`}>Detail</a><br/>
-                                        <a href={`/flights/${flight._id}`}>Edit Flight</a>
+                                        <a href={`/flights/${flight._id}`}>Detail of Flight</a><br/>
                                     </nav>
-                                    </li>
-                                </div>
+                                    </li>         
                             )
                         })
                     }
